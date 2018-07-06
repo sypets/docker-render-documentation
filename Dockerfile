@@ -89,9 +89,9 @@ RUN \
       /RESULT \
    \
    && COMMENT "Install system packages" \
-   && apt-get update \
-   \
-   && COMMENT "for ubuntu:18.04: (unfinished)" \
+   && apt-get update
+
+RUN COMMENT "for ubuntu:18.04: (unfinished)" \
    && apt-get install --dry-run -yq --no-install-recommends \
       wget \
       python \
@@ -106,13 +106,13 @@ RUN \
       rsync \
       tidy \
       unzip \
-      zip \
-   \
-   && COMMENT "Try extra cleaning besides /etc/apt/apt.conf.d/docker-clean" \
+      zip
+
+RUN COMMENT "Try extra cleaning besides /etc/apt/apt.conf.d/docker-clean" \
    && apt-get clean \
-   && rm -rf /var/lib/apt/lists/* \
-   \
-   && COMMENT "Provide some special files" \
+   && rm -rf /var/lib/apt/lists/*
+
+RUN COMMENT "Provide some special files" \
    && wget https://raw.githubusercontent.com/TYPO3-Documentation/typo3-docs-typo3-org-resources/master/userroot/scripts/bin/check_include_files.py \
         --quiet --output-document /usr/local/bin/check_include_files.py \
    && chmod +x /usr/local/bin/check_include_files.py \
@@ -120,15 +120,15 @@ RUN \
            --quiet --output-document /ALL/Makedir/_htaccess \
    && wget https://github.com/etobi/Typo3ExtensionUtils/raw/master/bin/t3xutils.phar \
            --quiet --output-document /usr/local/bin/t3xutils.phar \
-   && chmod +x /usr/local/bin/t3xutils.phar \
-   \
-   && COMMENT "Install Python packages" \
+   && chmod +x /usr/local/bin/t3xutils.phar
+
+RUN COMMENT "Install Python packages" \
    && pip install --upgrade pip \
    && pip install https://github.com/TYPO3-Documentation/t3SphinxThemeRtd/archive/${THEME_VERSION}.zip \
    && find /usr/local/lib/python2.7/site-packages/t3SphinxThemeRtd/ -exec touch --no-create --time=mtime --date="$(date --rfc-2822 --date=@$THEME_MTIME)" {} \; \
-   && pip install -r /ALL/requirements.txt \
-   \
-   && COMMENT "Install Sphinx-Extensions" \
+   && pip install -r /ALL/requirements.txt
+
+RUN COMMENT "Install Sphinx-Extensions" \
    && pip install https://github.com/TYPO3-Documentation/recommonmark/archive/v2018-04-27.zip \
    && pip install https://github.com/TYPO3-Documentation/sphinx-contrib-googlechart/archive/master.zip \
    && pip install https://github.com/TYPO3-Documentation/sphinx-contrib-googlemaps/archive/master.zip \
@@ -136,15 +136,15 @@ RUN \
    && pip install https://github.com/TYPO3-Documentation/sphinx-contrib-youtube/archive/develop.zip \
    && pip install https://github.com/TYPO3-Documentation/sphinxcontrib.t3fieldlisttable/archive/master.zip \
    && pip install https://github.com/TYPO3-Documentation/sphinxcontrib.t3tablerows/archive/master.zip \
-   && pip install https://github.com/TYPO3-Documentation/sphinxcontrib.t3targets/archive/develop.zip \
-   \
-   && COMMENT "Update TypoScript lexer for highlighting" \
+   && pip install https://github.com/TYPO3-Documentation/sphinxcontrib.t3targets/archive/develop.zip
+
+RUN COMMENT "Update TypoScript lexer for highlighting" \
    && COMMENT "usually: /usr/local/lib/python2.7/site-packages/pygments/lexers" \
    && destdir=$(dirname $(python -c "import pygments; print pygments.__file__"))/lexers \
    && wget $TYPOSCRIPT_PY_URL --quiet --output-document $destdir/typoscript.py \
-   && cd $destdir; python _mapping.py \
-   \
-   && COMMENT "Install TCT (ToolChainTool), the toolchain runner" \
+   && cd $destdir; python _mapping.py
+
+RUN COMMENT "Install TCT (ToolChainTool), the toolchain runner" \
    && pip install ${TCT_PIPINSTALL_URL}
 
 RUN COMMENT "Provide the toolchain" \
