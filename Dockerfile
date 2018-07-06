@@ -71,24 +71,24 @@ WORKDIR /ALL/Rundir
 
 RUN \
    true "Create executable COMMENT as a workaround to allow commenting here" \
-   && cp /bin/true /bin/COMMENT \
-   \
-   && COMMENT "Garantee folders" \
+   && cp /bin/true /bin/COMMENT
+
+RUN COMMENT "Garantee folders" \
    && mkdir /PROJECT \
-   && mkdir /RESULT \
-   \
-   && COMMENT "Avoid GIT bug" \
+   && mkdir /RESULT
+
+RUN COMMENT "Avoid GIT bug" \
    && cp /ALL/global-gitconfig.cfg /root/.gitconfig \
    && cp /ALL/global-gitconfig.cfg /.gitconfig \
-   && chmod 666 /.gitconfig \
-   \
-   && COMMENT "Make sure other users can write" \
+   && chmod 666 /.gitconfig
+
+RUN COMMENT "Make sure other users can write" \
    && chmod -R o+w \
       /ALL/Makedir \
       /ALL/dummy_webroot \
-      /RESULT \
-   \
-   && COMMENT "Install system packages" \
+      /RESULT
+
+RUN COMMENT "Install system packages" \
    && apt-get update \
    && apt-get install -yq --no-install-recommends \
       less \
